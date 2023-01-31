@@ -32,7 +32,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: debug
-        run: env
+        run: |
+          env
+          echo xx$github-pages
+          echo yy${{ secrets.GITHUB_TOKEN }}
+          echo zz${{ steps.deployment.outputs.page_url }}
       - name: Checkout
         uses: actions/checkout@v3
       - name: Setup Pages
