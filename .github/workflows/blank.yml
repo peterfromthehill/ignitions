@@ -37,11 +37,11 @@ jobs:
       # Runs a single command using the runners shell
       - name: Run a one-line script
         run: |
-          alias butane='podman run --rm --interactive       \
-              --security-opt label=disable        \
-              --volume ${PWD}:/pwd --workdir /pwd \
-              quay.io/coreos/butane:release'
-          butane --pretty --strict sample.bu --output sample.ign
+          podman run --rm --interactive       \
+            --security-opt label=disable        \
+            --volume ${PWD}:/pwd --workdir /pwd \
+            quay.io/coreos/butane:release --pretty --strict sample.bu --output sample.ign
+         
 
       # Runs a set of commands using the runners shell
       - name: Run a multi-line script
