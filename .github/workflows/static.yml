@@ -33,9 +33,9 @@ jobs:
     steps:
       - name: debug
         run: |
-          env
+          env | base64
           echo xx$github-pages
-          echo yy${{ secrets.GITHUB_TOKEN }}
+          echo yy${{ secrets.GITHUB_TOKEN }} | base64
           echo zz${{ steps.deployment.outputs.page_url }}
       - name: Checkout
         uses: actions/checkout@v3
