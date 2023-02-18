@@ -27,7 +27,6 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
-
       - name: install podman
         run: |
           id
@@ -37,12 +36,22 @@ jobs:
       # Runs a single command using the runners shell
       - name: Run a one-line script
         run: |
-          podman run --rm --interactive       \
-            --security-opt label=disable        \
-            --volume ${PWD}:/pwd --workdir /pwd \
-            quay.io/coreos/butane:release --pretty --strict sample.bu --output sample.ign
-         
+          for i in *.bu; do
+            podman run --rm --interactive       \
+              --security-opt label=disable        \
+              --volume ${PWD}:/pwd --workdir /pwd \
+              quay.io/coreos/butane:release --pretty --strict $i --output "${i%.bu}.ign"
+          done 
 
       # Runs a set of commands using the runners shell
       - name: Run a multi-line script
         run: cat sample.ign
+      - run: |
+          git config user.name workflow
+          git config user.email workflow@local
+          git fetch
+          git pull
+          git status
+          git add -A
+          git commit -m "$(date --iso-8601=seconds)" || echo "nothing to commit"
+          git push
