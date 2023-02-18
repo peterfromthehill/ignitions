@@ -1,0 +1,24 @@
+{
+  "ignition": {
+    "version": "3.3.0"
+  },
+  "passwd": {
+    "users": [
+      {
+        "name": "core",
+        "sshAuthorizedKeys": [
+          "ssh-rsa ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC6pJ8LQ+twrutgF/RZyY1VGNOwJFge8dT583O7KouA1fdlfbJrmnS/MtCE4ckOptfu7OBzy1+eIfg2qajMZ73MJMEM465TW0KbUk6kEclwkI9FwyTFyHV+kwqp7NvF3SXIMFqhMMKEqNzJzKJ/DdCckxrzyC6rIEI/3gm4t9iTrKFcvwIap1HycC3uZpzeiXXNobdJKdT/ttl0JK08UxeMK9gftICDsMGV5v/784UuxALOHJzztkkpGEKaXPTA3fZxXFAKiiqvj72IZYGipBe1QEkdMwlvMZKbuq6+neeKkTBT8ZFQVkI1bbwBlEWwKpD901t65wQ/wttPeTi6EqXx dummy"
+        ]
+      }
+    ]
+  },
+  "systemd": {
+    "units": [
+      {
+        "contents": "[Unit]\nDescription=MyApp\nAfter=network-online.target\nWants=network-online.target\n\n[Service]\nTimeoutStartSec=0\nExecStartPre=-/bin/podman kill busybox1\nExecStartPre=-/bin/podman rm busybox1\nExecStartPre=/bin/podman pull busybox\nExecStart=/bin/podman run --name busybox1 busybox /bin/sh -c \"trap 'exit 0' INT TERM; while true; do echo Hello World; sleep 1; done\"\n\n[Install]\nWantedBy=multi-user.target\n",
+        "enabled": true,
+        "name": "hello.service"
+      }
+    ]
+  }
+}
