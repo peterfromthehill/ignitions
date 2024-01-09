@@ -1,0 +1,26 @@
+variant: fcos
+version: 1.4.0
+passwd:
+  users:
+    - name: core
+      ssh_authorized_keys:
+        - ssh-rsa ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC6pJ8LQ+twrutgF/RZyY1VGNOwJFge8dT583O7KouA1fdlfbJrmnS/MtCE4ckOptfu7OBzy1+eIfg2qajMZ73MJMEM465TW0KbUk6kEclwkI9FwyTFyHV+kwqp7NvF3SXIMFqhMMKEqNzJzKJ/DdCckxrzyC6rIEI/3gm4t9iTrKFcvwIap1HycC3uZpzeiXXNobdJKdT/ttl0JK08UxeMK9gftICDsMGV5v/784UuxALOHJzztkkpGEKaXPTA3fZxXFAKiiqvj72IZYGipBe1QEkdMwlvMZKbuq6+neeKkTBT8ZFQVkI1bbwBlEWwKpD901t65wQ/wttPeTi6EqXx dummy
+systemd:
+  units:
+    - name: hello.service
+      enabled: true
+      contents: |
+        [Unit]
+        Description=MyApp
+        After=network-online.target
+        Wants=network-online.target
+
+        [Service]
+        TimeoutStartSec=0
+        ExecStartPre=-/bin/podman kill busybox1
+        ExecStartPre=-/bin/podman rm busybox1
+        ExecStartPre=/bin/podman pull busybox
+        ExecStart=/bin/podman run --name busybox1 busybox /bin/sh -c "trap 'exit 0' INT TERM; while true; do echo Hello World; sleep 1; done"
+
+        [Install]
+        WantedBy=multi-user.target
